@@ -1,0 +1,31 @@
+{
+  "name": "autoria-parser",
+  "version": "1.0.0",
+  "description": "Autoria Parsing app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ready2know/autoria-parser.git"
+  },
+  "keywords": [
+    "autoria",
+    "parser",
+    "nodejs"
+  ],
+  "author": "Vladislav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ready2know/autoria-parser/issues"
+  },
+  "homepage": "https://github.com/ready2know/autoria-parser#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1",
+    "tress": "^1.1.4"
+  }
+}
