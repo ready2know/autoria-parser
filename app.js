@@ -57,6 +57,7 @@ async function getAdvertPhotos(advertId){
     url.searchParams.set("api_key", process.env.AUTORIA_APIKEY);
 
     return axios.get(url.href).then((response) => {
+        console.log(response.data);
         saveToJSON(response.data, `photos_${advertId}`);
         return response.data;
     }).catch((err) => { console.log(err); });
@@ -64,7 +65,6 @@ async function getAdvertPhotos(advertId){
 
 
 function saveToJSON(obj, filename = `tmp`) {
-    
     if(typeof obj !== "string") obj = JSON.stringify(obj);
     fs.writeFile(`.temp/${filename}_${Date.now()}.json`, obj, function (err) {
         if (err) {
@@ -73,9 +73,7 @@ function saveToJSON(obj, filename = `tmp`) {
     });
 }
 
-function saveToMy(params) {
-    
-}
+
 
 async function main(params) {
     //await searchAdverts({ countpage: 100, category_id: 1, currency: 1 });
