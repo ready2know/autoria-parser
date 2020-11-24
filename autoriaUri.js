@@ -8,11 +8,11 @@ module.exports = {
     photo_cdn: `https://cdn.riastatic.com/photos/auto/photo/`,
 
     search_params: {
-        categories: `https://developers.ria.com/auto/categories/`, // ?apikey=YOUR_API_KEY
+        vehicles: `https://developers.ria.com/auto/categories/`, // ?apikey=YOUR_API_KEY
 
         bodystyles: `https://developers.ria.com/auto/categories/:categoryId/bodystyles`, // ?api_key=YOUR_API_KEY
         bodystyles_all: `https://developers.ria.com/auto/bodystyles`, // ?api_key=
-        marks: `https://developers.ria.com/auto/categories/:categoryId/marks`, // ?api_key=YOUR_API_KEY
+        brands: `https://developers.ria.com/auto/categories/:categoryId/marks`, // ?api_key=YOUR_API_KEY
         models: `http://api.auto.ria.com/categories/:categoryId/marks/:markId/models?`, // ?api_key=YOUR_API_KEY
 
         driver_types: `https://developers.ria.com/auto/categories/:categoryId/driverTypes`, // api
