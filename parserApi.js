@@ -77,7 +77,7 @@ async function getAvgPrice(params={})
 }
 
 
-module.exports = {
+module.exports.autoria = {
     searchAdverts:searchAdverts,
     getAdvertPhotos:getAdvertPhotos,
     getAdvertInfo:getAdvertInfo,

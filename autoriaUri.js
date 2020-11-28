@@ -32,5 +32,5 @@ module.exports.api = {
 }
 
 module.exports.html = {
-    search:""
+    search:"https://auto.ria.com/search/"
 }
