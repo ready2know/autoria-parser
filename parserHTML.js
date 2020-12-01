@@ -1,25 +1,18 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
+const appUtils = require("./appUtils");
+
 const AUTORIA_URI = require("./autoriaUri");
 
 
-async function searchAdverts(params = {}) {
+async function searchAdverts(params = {}, callback) {
     let url = new URL(AUTORIA_URI.html.search);
-    if (params) {
-        for (let [key, value] of Object.entries(params)) {
-            if (Array.isArray(value)) {
-                value.forEach((item, index, array) => { url.searchParams.set(`${key}[${index}]`, item) })
-            }
-            else
-                url.searchParams.set(key.toString(), value);
-        }
-    }
 
-    if (Object.keys(params).length < 1) {
-        url.searchParams.set("indexName", "auto");
-        url.searchParams.set("categories.main.id", "1");
-    }
+
+    url.searchParams.set("indexName", "auto");
+    url.searchParams.set("categories.main.id", "1");
+
 
     url.searchParams.set("price.currency", "1");
     url.searchParams.set("sort[0].order", "dates.created.desc");
@@ -28,11 +21,25 @@ async function searchAdverts(params = {}) {
     url.searchParams.set("abroad.not", "0");
     url.searchParams.set("custom.not", "1");
 
-    console.log(url.href);
+    if (params) {
+        for (let [key, value] of Object.entries(params)) {
+            //appUtils.log(`${key} : ${value}`);
+            if (Array.isArray(value)) {
+                //appUtils.log(`Arr ${key} : ${value}`);
+                value.forEach((item, index, array) => { url.searchParams.set(`${key}[${index}]`, item) })
+            }
+            else {
+                //appUtils.log(`Not Arr ${key} : ${value}`);
+                url.searchParams.set(key.toString(), value);
+            }
+        }
+    }
+
+    appUtils.log(url.href);
 
     return axios.get(url.href, {}).then((response) => {
         let $ = cheerio.load(response.data);
-
+        let result = {};
         let adverts = [];
 
         $("section.ticket-item").each(function (i, item) {
@@ -62,7 +69,7 @@ async function searchAdverts(params = {}) {
                 'year': `${info.data("year")}`,
                 'advert_id': `${info.data("id")}`,
                 'user_id': `${info.data("user-id")}`,
-                'add_date': `${info.data("expire-date")}`,
+                //'add_date': `${info.data("expire-date")}`,
                 'link': `${info.data("link-to-view")}`,
                 'price': price,
                 'milleage': milleage,
@@ -75,10 +82,13 @@ async function searchAdverts(params = {}) {
 
         });
 
-        console.log(adverts);
+        result.currPage = $("input#paginationPage").val();
+        result.paginationSize = $("input#paginationSize").val();
+        result.adverts = adverts;
 
-        return adverts;
-    }).catch((err) => { console.log(err); });
+
+        return result;
+    }).catch((err) => { appUtils.log(err); });
 }
 
 
@@ -88,5 +98,3 @@ module.exports.autoria = {
     // getAdvertInfo: getAdvertInfo,
     // getAvgPrice: getAvgPrice
 }
-
-searchAdverts()

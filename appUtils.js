@@ -9,6 +9,8 @@ module.exports.log = function (message) {
 module.exports.wait = function (ms) {
     return new Promise((resolve) => { setTimeout(resolve, ms) });
 }
+
+module.exports.sleep = module.exports.wait;
 module.exports.printProgress = function (progress) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
