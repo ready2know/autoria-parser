@@ -6,27 +6,29 @@ const appUtils = require("./appUtils");
 const apiParser = require("./parserApi");
 const htmlParser = require("./parserHTML");
 const mysql = require("./mysql");
+const CronJob = require('cron').CronJob;
+
+let parsingStatus = "waiting";
 
 async function main(params) {
-    //await searchAdverts({ countpage: 100, category_id: 1, currency: 1 });
-
-    q.push({ page: 0 });
-
 
 }
 
 let q = tress(function (job, done) {
+    parsingStatus = "ongoing";
+    if (!job.page) {
+        job.page = 0;
+    }
     htmlParser.autoria.searchAdverts(job).then(function (data) {
-        //if (data.adverts.length > 0 && job.page<4)
-        //  q.push({ page: job.page + 1 });
-        //appUtils.saveToJSON(data,`page_${job.page}`);
-        if (data.adverts.length > 0 && job.page<10)
-            {
-                mysql.saveAdverts(data.adverts);
-                appUtils.wait(2000);
-                q.push({page:job.page+1??0});
-            }
-        else console.log("Нет строк на запись")
+        if (data && data.adverts && data.adverts.length > 0) {
+            mysql.saveAdverts(data.adverts);
+            appUtils.wait(10000);
+            q.push({ page: (job.page + 1) });
+        }
+        else {
+            console.log("Нет строк на запись");
+            parsingStatus = 'waiting';
+        }
         done();
     });
 
@@ -34,15 +36,24 @@ let q = tress(function (job, done) {
 
 
 q.drain = function () {
-    //appUtils.log("Finished");
+    appUtils.log("Finished");
+    parsingStatus = 'waiting';
+
 }
 
 q.error = function (err) {
-    //appUtils.log('Job ' + this + ' failed with error ' + err);
+    appUtils.log('Job ' + this + ' failed with error ' + err);
 }
 
 q.success = function (data) {
     appUtils.log('Страница ' + this.page + ' успешно просканирована.');
 }
 
-main();
+
+
+let job = new CronJob('* */5 * * * *', function () {
+    if (parsingStatus == "waiting")
+        q.push({ page: 0 });
+}, null, true, null, null, true);
+
+//job.start();
