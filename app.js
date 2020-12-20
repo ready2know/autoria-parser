@@ -8,26 +8,26 @@ const htmlParser = require("./parserHTML");
 const mysql = require("./mysql");
 const CronJob = require('cron').CronJob;
 
-let parsingStatus = "waiting";
+let isParsing = false;
 
 async function main(params) {
 
 }
 
 let q = tress(function (job, done) {
-    parsingStatus = "ongoing";
+    isParsing = true;
     if (!job.page) {
         job.page = 0;
     }
-    htmlParser.autoria.searchAdverts(job).then(function (data) {
+    htmlParser.autoria.searchAdverts(job).then(async function (data) {
         if (data && data.adverts && data.adverts.length > 0) {
             mysql.saveAdverts(data.adverts);
-            appUtils.wait(10000);
+            await appUtils.wait(2000);
             q.push({ page: (job.page + 1) });
         }
         else {
             console.log("Нет строк на запись");
-            parsingStatus = 'waiting';
+            isParsing = false;
         }
         done();
     });
@@ -37,7 +37,7 @@ let q = tress(function (job, done) {
 
 q.drain = function () {
     appUtils.log("Finished");
-    parsingStatus = 'waiting';
+    isParsing = false;
 
 }
 
@@ -52,8 +52,12 @@ q.success = function (data) {
 
 
 let job = new CronJob('* */5 * * * *', function () {
-    if (parsingStatus == "waiting")
+    if (!isParsing) {
+        isParsing = true;
+        appUtils.log("Starting parsing process")
         q.push({ page: 0 });
+        return;
+    }
 }, null, true, null, null, true);
 
-//job.start();
+job.start();

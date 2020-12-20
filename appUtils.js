@@ -4,18 +4,20 @@ let messageCount = 0;
 let messageArchive = [];
 
 module.exports.log = function (message) {
-    console.log(`${Date.now().getDate()}-${Date.now().getMonth()+1} ${Date.now().getHours()}:${Date.now().getMinutes()}:${Date.now().getSeconds()}> ${message}`);
+    let dt = new Date();
+    let dtStr = `${dt.getDate()}-${dt.getMonth() + 1} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+
+    console.log(`${dtStr}> ${message}`);
     messageArchive.push(message);
-    if (messageArchive.length > 5)
-        {
-            for (let msg of messageArchive)
+    if (messageArchive.length > 5) {
+        for (let msg of messageArchive)
             fs.appendFile('.temp/msg.log', `${msg}\n`, function (err) {
                 if (err) {
                     console.log(err);
                 }
             });
-            messageArchive = [];
-        }
+        messageArchive = [];
+    }
 };
 
 module.exports.wait = function (ms) {
@@ -31,7 +33,7 @@ module.exports.printProgress = function (progress) {
 
 module.exports.saveToJSON = function (obj, filename = `tmp`) {
     if (typeof obj !== "string") obj = JSON.stringify(obj);
-    fs.writeFile(`.temp/${filename}_${Date.now()}.json`, obj, function (err) {
+    fs.writeFile(`.temp/${filename}_${dt}.json`, obj, function (err) {
         if (err) {
             console.log(err);
         }
@@ -40,7 +42,7 @@ module.exports.saveToJSON = function (obj, filename = `tmp`) {
 
 module.exports.saveToTXT = function (obj, filename = `tmp`) {
     if (typeof obj !== "string") obj = JSON.stringify(obj);
-    fs.writeFile(`.temp/${filename}_${Date.now()}.txt`, obj, function (err) {
+    fs.writeFile(`.temp/${filename}_${dt}.txt`, obj, function (err) {
         if (err) {
             console.log(err);
         }
