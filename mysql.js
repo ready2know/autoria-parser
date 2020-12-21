@@ -18,7 +18,7 @@ async function fetch(query, callback = () => { }) {
 }
 
 async function saveAdverts(adverts) {
-  appUtils.saveToJSON(adverts, "adverts");
+  //appUtils.saveToJSON(adverts, "adverts");
   //{"Audi":{"id":3, "models":{"A8":123,"A9":213}}}
   if (adverts.length > 0) {
     let brandModelList = await pool.query("SELECT b.id AS BrandID, b.name AS BrandName, m.id AS ModelID, m.name AS ModelName FROM `brands` b, `models` m WHERE m.brand = b.id AND b.vehicle_type = 1;")
@@ -46,7 +46,7 @@ async function saveAdverts(adverts) {
       );
 
 
-    appUtils.saveToJSON(citiesList, `citiesList`);
+    //appUtils.saveToJSON(citiesList, `citiesList`);
 
     let sqlQuery = "INSERT INTO `autoparse`.`adverts`(`_id`,`id`,`user_id`,`brand`,`model`,`year`, `link`,`price`, `milleage`, `engine_cap`, `city`, `state`) VALUES";
 
