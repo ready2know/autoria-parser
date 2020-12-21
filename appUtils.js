@@ -32,8 +32,9 @@ module.exports.printProgress = function (progress) {
 }
 
 module.exports.saveToJSON = function (obj, filename = `tmp`) {
+
     if (typeof obj !== "string") obj = JSON.stringify(obj);
-    fs.writeFile(`.temp/${filename}_${dt}.json`, obj, function (err) {
+    fs.writeFile(`.temp/${filename}_${Date.now()}.json`, obj, function (err) {
         if (err) {
             console.log(err);
         }
@@ -41,8 +42,9 @@ module.exports.saveToJSON = function (obj, filename = `tmp`) {
 }
 
 module.exports.saveToTXT = function (obj, filename = `tmp`) {
+
     if (typeof obj !== "string") obj = JSON.stringify(obj);
-    fs.writeFile(`.temp/${filename}_${dt}.txt`, obj, function (err) {
+    fs.writeFile(`.temp/${filename}_${Date.now()}.txt`, obj, function (err) {
         if (err) {
             console.log(err);
         }
